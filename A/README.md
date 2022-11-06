@@ -12,3 +12,7 @@ In this task we will use service [draw-sql](https://drawsql.app)
 ## Task №4
 
 ## Task №5
+
+## Task №6
+
+## Task №7
