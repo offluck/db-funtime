@@ -3,7 +3,13 @@ CREATE SCHEMA IF NOT EXISTS travels;
 
 CREATE TABLE travels.Employee (
     id INT PRIMARY KEY,
-    employee_name VARCHAR(10)
+    employee_name VARCHAR(10),
+    company_id INT
+);
+
+CREATE TABLE travels.Company (
+    id INT PRIMARY KEY,
+    company_name VARCHAR(10)
 );
 
 CREATE TABLE travels.Trip (
@@ -39,6 +45,8 @@ CREATE TABLE travels.City (
     city_name VARCHAR(10)
 );
 
+
+ALTER TABLE travels.Employee ADD FOREIGN KEY (company_id) REFERENCES travels.Company (id);
 
 ALTER TABLE travels.Trip ADD FOREIGN KEY (employee_id) REFERENCES travels.Employee (id);
 
