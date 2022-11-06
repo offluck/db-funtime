@@ -7,4 +7,5 @@ FROM
     travels.Trip
 WHERE travels.Employee.comapny_id = travels.Company.id
     AND travels.Trip.employee_id = travels.Employee.id
-GROUP BY travels.Trip.hotel_id
+    AND travels.enddate > NOW() - INTERVAL '1 month'
+GROUP BY travels.Trip.hotel_id;

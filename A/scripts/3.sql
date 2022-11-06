@@ -19,9 +19,7 @@ WHERE travels.Employee.id = travels.Trip.employee_id
 
     -- Employees who travel this year and their flights were not cancelled
     AND travels.Trip.canceletiondate IS NULL
-    AND travels.Trip.startdate
-        BETWEEN to_date('01-01-2022', 'dd-mm-yyyy')
-        AND to_date('31-12-2022', 'dd-mm-yyyy')
+    AND date_part('year', travels.Trip.startdate) = date_part('year', NOW())
 
     -- Hotels booked in these flights
     AND travels.Trip.hotel_id = travels.Hotel.id;

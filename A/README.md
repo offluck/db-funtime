@@ -75,7 +75,9 @@ ALTER TABLE travels.Flight ADD FOREIGN KEY (destination_city_id) REFERENCES trav
 
 ## Task №3
 ```sql
-SELECT DISTINCT travels.Hotel.id, travels.Hotel.hotel_name
+SELECT DISTINCT
+    travels.Hotel.id,
+    travels.Hotel.hotel_name
 FROM
     travels.Employee,
     travels.Trip,
@@ -94,9 +96,7 @@ WHERE travels.Employee.id = travels.Trip.employee_id
 
     -- Employees who travel this year and their flights were not cancelled
     AND travels.Trip.canceletiondate IS NULL
-    AND travels.Trip.startdate
-        BETWEEN to_date('01-01-2022', 'dd-mm-yyyy')
-        AND to_date('31-12-2022', 'dd-mm-yyyy')
+    AND date_part('year', travels.Trip.startdate) = date_part('year', NOW())
 
     -- Hotels booked in these flights
     AND travels.Trip.hotel_id = travels.Hotel.id;
@@ -117,6 +117,21 @@ GROUP BY travels.Trip.hotel_id
 ```
 
 ## Task №5
+```sql
+SELECT DISTINCT
+    travels.Company.id,
+    travels.company.company_name 
+FROM
+    travels.Company,
+    travels.Employee,
+    travels.Trip,
+    travels.Flight
+WHERE travels.Employee.comapny_id = travels.Company.id
+    AND travels.Trip.employee_id = travels.Employee.id
+    AND travels.enddate > NOW() - INTERVAL '1 month'
+    AND travels.Trip.ticket_2_id = travels.Flight.flight_number
+GROUP BY travels.Flight.origin_city_id;
+```
 
 ## Task №6
 
