@@ -20,7 +20,8 @@ CREATE TABLE travels.Trip (
     cancelationdate DATE,
     hotel_id INT,
     ticket_1_id INT,
-    ticket_2_id INT
+    ticket_2_id INT,
+    branch_id INT
 );
 
 CREATE TABLE travels.Flight (
@@ -42,7 +43,13 @@ CREATE TABLE travels.Hotel (
 
 CREATE TABLE travels.City (
     id INT PRIMARY KEY,
-    city_name VARCHAR(10)
+    city_name VARCHAR(10),
+    branch_id INT
+);
+
+CREATE TABLE travels.Branch (
+    id INT PRIMARY KEY,
+    branch_name VARCHAR(10)
 );
 
 
@@ -51,6 +58,8 @@ ALTER TABLE travels.Employee ADD FOREIGN KEY (company_id) REFERENCES travels.Com
 ALTER TABLE travels.Trip ADD FOREIGN KEY (employee_id) REFERENCES travels.Employee (id);
 
 ALTER TABLE travels.Trip ADD FOREIGN KEY (hotel_id) REFERENCES travels.Hotel (id);
+
+ALTER TABLE travels.Trip ADD FOREIGN KEY (branch_id) REFERENCES travels.Branch (id);
 
 ALTER TABLE travels.Trip ADD FOREIGN KEY (ticket_1_id) REFERENCES travels.Flight (flight_number);
 
@@ -61,3 +70,5 @@ ALTER TABLE travels.Hotel ADD FOREIGN KEY (city_id) REFERENCES travels.City (id)
 ALTER TABLE travels.Flight ADD FOREIGN KEY (oigin_city_id) REFERENCES travels.City (id);
 
 ALTER TABLE travels.Flight ADD FOREIGN KEY (destination_city_id) REFERENCES travels.City (id);
+
+ALTER TABLE travels.City ADD FOREIGN KEY (branch_id) REFERENCES travels.Branch (id);

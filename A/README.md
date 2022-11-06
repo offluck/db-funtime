@@ -30,7 +30,8 @@ CREATE TABLE travels.Trip (
     cancelationdate DATE,
     hotel_id INT,
     ticket_1_id INT,
-    ticket_2_id INT
+    ticket_2_id INT,
+    branch_id INT
 );
 
 CREATE TABLE travels.Flight (
@@ -52,7 +53,13 @@ CREATE TABLE travels.Hotel (
 
 CREATE TABLE travels.City (
     id INT PRIMARY KEY,
-    city_name VARCHAR(10)
+    city_name VARCHAR(10),
+    branch_id INT
+);
+
+CREATE TABLE travels.Branch (
+    id INT PRIMARY KEY,
+    branch_name VARCHAR(10)
 );
 
 
@@ -61,6 +68,8 @@ ALTER TABLE travels.Employee ADD FOREIGN KEY (company_id) REFERENCES travels.Com
 ALTER TABLE travels.Trip ADD FOREIGN KEY (employee_id) REFERENCES travels.Employee (id);
 
 ALTER TABLE travels.Trip ADD FOREIGN KEY (hotel_id) REFERENCES travels.Hotel (id);
+
+ALTER TABLE travels.Trip ADD FOREIGN KEY (branch_id) REFERENCES travels.Branch (id);
 
 ALTER TABLE travels.Trip ADD FOREIGN KEY (ticket_1_id) REFERENCES travels.Flight (flight_number);
 
@@ -71,6 +80,8 @@ ALTER TABLE travels.Hotel ADD FOREIGN KEY (city_id) REFERENCES travels.City (id)
 ALTER TABLE travels.Flight ADD FOREIGN KEY (oigin_city_id) REFERENCES travels.City (id);
 
 ALTER TABLE travels.Flight ADD FOREIGN KEY (destination_city_id) REFERENCES travels.City (id);
+
+ALTER TABLE travels.City ADD FOREIGN KEY (branch_id) REFERENCES travels.Branch (id);
 ```
 
 ## Task №3
@@ -113,7 +124,7 @@ FROM
     travels.Trip
 WHERE travels.Employee.comapny_id = travels.Company.id
     AND travels.Trip.employee_id = travels.Employee.id
-GROUP BY travels.Trip.hotel_id
+GROUP BY travels.Trip.hotel_id;
 ```
 
 ## Task №5
@@ -134,5 +145,54 @@ GROUP BY travels.Flight.origin_city_id;
 ```
 
 ## Task №6
+```sql
+SELECT travels.Branch.id, travels.Branch.branch_name
+FROM
+    travels.Branch,
+    travels.Trip
+WHERE travels.Trip.branch_id = travels.Branch.id
+    AND travels.Trip.startdate - travels.Trip.cancelationdate <= INTERVAL '3 days'
+GROUP BY travels.Trip.branch_id
+ORDER BY COUNT(*)
+LIMIT 3;
+```
 
 ## Task №7
+```sql
+SELECT DISTINCT
+    emp1.id,
+    emp1.employee_name
+    emp2.id,
+    emp2.employee_name
+FROM
+    travels.Employee AS emp1
+    travels.Employee AS emp2
+    travels.Trip AS trip1
+    travels.Trip AS trip2
+    travels.Flight AS flight1
+    travels.Flight AS flight2
+WHERE trip1.employee_id = emp1
+    AND trip2.employee_id = emp2
+    AND
+    (
+        (
+            trip1.ticket_1_id = flight1.flight_number
+            AND trip2.ticket_1_id = flight2.flight_number
+
+            AND flight1.origin_city_id = flight2.origin_city_id
+            AND flight1.destination_city_id = flight2.destination_city_id
+
+            AND flight1.flight_number != flight2.flight_number
+        )
+        OR
+        (
+            trip1.ticket_2_id = flight1.flight_number
+            AND trip2.ticket_2_id = flight2.flight_number
+
+            AND flight1.origin_city_id = flight2.origin_city_id
+            AND flight1.destination_city_id = flight2.destination_city_id
+
+            AND flight1.flight_number != flight2.flight_number
+        )
+    );
+```
