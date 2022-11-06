@@ -1,4 +1,6 @@
-SELECT DISTINCT travels.Hotel.id, travels.Hotel.hotel_name
+SELECT DISTINCT
+    travels.Hotel.id,
+    travels.Hotel.hotel_name
 FROM
     travels.Employee,
     travels.Trip,

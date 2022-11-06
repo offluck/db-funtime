@@ -13,7 +13,13 @@ CREATE SCHEMA IF NOT EXISTS travels;
 
 CREATE TABLE travels.Employee (
     id INT PRIMARY KEY,
-    employee_name VARCHAR(10)
+    employee_name VARCHAR(10),
+    company_id INT
+);
+
+CREATE TABLE travels.Company (
+    id INT PRIMARY KEY,
+    company_name VARCHAR(10)
 );
 
 CREATE TABLE travels.Trip (
@@ -49,6 +55,8 @@ CREATE TABLE travels.City (
     city_name VARCHAR(10)
 );
 
+
+ALTER TABLE travels.Employee ADD FOREIGN KEY (company_id) REFERENCES travels.Company (id);
 
 ALTER TABLE travels.Trip ADD FOREIGN KEY (employee_id) REFERENCES travels.Employee (id);
 
@@ -95,6 +103,18 @@ WHERE travels.Employee.id = travels.Trip.employee_id
 ```
 
 ## Task №4
+```sql
+SELECT DISTINCT
+    travels.Company.id,
+    travels.company.company_name 
+FROM
+    travels.Company,
+    travels.Employee,
+    travels.Trip
+WHERE travels.Employee.comapny_id = travels.Company.id
+    AND travels.Trip.employee_id = travels.Employee.id
+GROUP BY travels.Trip.hotel_id
+```
 
 ## Task №5
 
