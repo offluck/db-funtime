@@ -115,32 +115,42 @@ WHERE travels.Employee.id = travels.Trip.employee_id
 
 ## Task №4
 ```sql
-SELECT DISTINCT
-    travels.Company.id,
-    travels.company.company_name 
-FROM
-    travels.Company,
-    travels.Employee,
-    travels.Trip
-WHERE travels.Employee.comapny_id = travels.Company.id
-    AND travels.Trip.employee_id = travels.Employee.id
-GROUP BY travels.Trip.hotel_id;
-```
-
-## Task №5
-```sql
-SELECT DISTINCT
-    travels.Company.id,
-    travels.company.company_name 
+SELECT SUM(
+    travels.Hotel.room_charge +
+    flight1.ticket_price +
+    flight2.ticket_price
+    )
 FROM
     travels.Company,
     travels.Employee,
     travels.Trip,
-    travels.Flight
+    travels.Hotel,
+    travels.Flight AS flight1,
+    travels.Flight AS flight2
+WHERE travels.Employee.comapny_id = travels.Company.id
+    AND travels.Trip.employee_id = travels.Employee.id
+    AND travels.Trip.enddate > NOW() - INTERVAL '1 month'
+    AND travels.Trip.hotel_id = travels.Hotel
+    AND travels.Trip.ticket_1_id = flight1.flight_number
+    AND travels.Trip.ticket_2_id = flight2.flight_number
+GROUP BY travels.Trip.hotel_id;
+
+```
+
+## Task №5
+```sql
+SELECT SUM(travels.Hotel.room_charge)
+FROM
+    travels.Company,
+    travels.Employee,
+    travels.Trip,
+    travels.Flight,
+    travels.Hotel
 WHERE travels.Employee.comapny_id = travels.Company.id
     AND travels.Trip.employee_id = travels.Employee.id
     AND travels.enddate > NOW() - INTERVAL '1 month'
     AND travels.Trip.ticket_2_id = travels.Flight.flight_number
+    AND travels.Trip.hotel_id = travels.Hotel.id
 GROUP BY travels.Flight.origin_city_id;
 ```
 
